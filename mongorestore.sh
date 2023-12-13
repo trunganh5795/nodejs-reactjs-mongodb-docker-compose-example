@@ -1,0 +1,1 @@
+mongorestore -d asset-service-egt /dumpdata

@@ -1,0 +1,35 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodbserver
+    restart: unless-stopped
+    volumes:
+      - ./mongorestore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./dumpdata:/dumpdata
+    # ports:
+    #   - 27018:27017
+  server:
+    container_name: server
+    build: ./be
+    volumes:
+      - ./be:/server
+      - /server/node_modules
+    depends_on:
+      - mongodb
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=mongodb
+      - IS_IN_DOCKER=true
+  frontend:
+    container_name: reactapp
+    build: ./fe
+    volumes:
+      - ./fe:/app
+      - /app/node_modules
+    depends_on:
+      - server
+    ports:
+      - 3001:3001
+    environment:
+      - CHOKIDAR_USEPOLLING=true
