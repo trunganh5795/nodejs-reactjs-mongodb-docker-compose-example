@@ -1,0 +1,11 @@
+services:
+  server:
+    container_name: fe-test
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      - IS_IN_DOCKER=true
